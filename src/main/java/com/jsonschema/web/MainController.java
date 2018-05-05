@@ -16,6 +16,7 @@
 package com.jsonschema.web;
 
 import com.jsonschema.web.dto.Customer;
+import com.jsonschema.web.dto.Order;
 import com.jsonschema.web.dto.Product;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import com.jsonschema.annotation.JsonSchema;
@@ -60,13 +61,13 @@ public class MainController {
 	@RequestMapping("/order/{id}")
 	@ResponseBody
 	@JsonSchema(responseSchema = "order_output")
-	public void getOrder(@PathVariable("id") int id) {
+	public Order getOrder(@PathVariable("id") int id) {
 		Product product1 = Product.builder().code("code1").name("手机").description("华为P20").build();
 		Product product2 = Product.builder().name("电池").description("华为P20电池").build();
 		List<Product> products = new ArrayList<>();
 		products.add(product1);
 		products.add(product2);
-		//return Order.builder().id(id).customer(Customer.builder().lastName("张").build()).products(products).build();
+		return Order.builder().id(id).customer(Customer.builder().lastName("张").build()).products(products).build();
 	}
 
 }

@@ -3,6 +3,7 @@
   "title": "order output",
   "description": "JSON representation of output order",
   "type": "object",
+  "required": [ "id", "customer", "products" ],
   "properties": {
     "id": {
       "type": "integer",
@@ -30,7 +31,6 @@
       }
     }
   },
-  "required": [ "id", "customer", "products" ],
   "additionalProperties": false,
   "definitions": {
     "customer": {

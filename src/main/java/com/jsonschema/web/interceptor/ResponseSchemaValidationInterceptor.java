@@ -1,5 +1,6 @@
 package com.jsonschema.web.interceptor;
 
+import com.jsonschema.util.JsonSchemaUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -29,6 +30,7 @@ public class ResponseSchemaValidationInterceptor {
         if (!StringUtils.hasText(requestSchema)) {
             return;
         }
+        JsonSchemaUtil.validateObject(annotation.ns(), requestSchema, body);
     }
 
     @AfterReturning(value = "@within(org.springframework.web.bind.annotation.RestController)", returning = "response")
@@ -36,7 +38,12 @@ public class ResponseSchemaValidationInterceptor {
         if (response == null) {
             return;
         }
-
+        JsonSchema annotation = getSchemaAnnotation(joinPoint);
+        String responseSchema = annotation.responseSchema();
+        if (!StringUtils.hasText(responseSchema)) {
+            return;
+        }
+        JsonSchemaUtil.validateObject(annotation.ns(), responseSchema, response);
         log.info("method: {}, args: {}", joinPoint.getSignature().getName(), Arrays.toString(joinPoint.getArgs()));
     }
 
