@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.security.samples.web;
+package com.jsonschema.web;
 
+import com.jsonschema.web.dto.Customer;
+import com.jsonschema.web.dto.Product;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
-import org.springframework.security.samples.schema.annotation.JsonSchema;
-import org.springframework.security.samples.web.dto.Customer;
-import org.springframework.security.samples.web.dto.Order;
-import org.springframework.security.samples.web.dto.Product;
+import com.jsonschema.annotation.JsonSchema;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;

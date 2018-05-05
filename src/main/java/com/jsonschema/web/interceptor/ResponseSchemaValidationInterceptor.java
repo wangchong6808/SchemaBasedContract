@@ -1,4 +1,4 @@
-package org.springframework.security.samples.web.interceptor;
+package com.jsonschema.web.interceptor;
 
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
@@ -6,7 +6,7 @@ import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.springframework.security.samples.schema.annotation.JsonSchema;
+import com.jsonschema.annotation.JsonSchema;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -18,7 +18,7 @@ import java.util.Arrays;
 public class ResponseSchemaValidationInterceptor {
 
 
-    @Before("@annotation(org.springframework.security.samples.schema.annotation.JsonSchema) " +
+    @Before("@annotation(com.jsonschema.annotation.JsonSchema) " +
             "&& args(.., @org.springframework.web.bind.annotation.RequestBody body)")
     public void logControllerMethod(JoinPoint joinPoint, Object body) {
         if (body == null) {

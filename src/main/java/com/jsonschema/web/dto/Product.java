@@ -1,4 +1,4 @@
-package org.springframework.security.samples.web.dto;
+package com.jsonschema.web.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

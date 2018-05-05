@@ -1,4 +1,4 @@
-package org.springframework.security.samples.schema.annotation;
+package com.jsonschema.util;
 
 
 public class JsonSchemaUtil {

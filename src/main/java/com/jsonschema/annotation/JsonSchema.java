@@ -1,4 +1,4 @@
-package org.springframework.security.samples.schema.annotation;
+package com.jsonschema.annotation;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
