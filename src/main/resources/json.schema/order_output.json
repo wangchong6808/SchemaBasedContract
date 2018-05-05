@@ -1,0 +1,55 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "order output",
+  "description": "JSON representation of output order",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "integer",
+      "minimum": 10
+    },
+    "customer" : {
+      "$ref": "#/definitions/customer"
+    },
+    "products" : {
+      "type" : "array",
+      "items": {
+        "type": "object",
+        "required": [ "code", "name" ],
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "required": [ "id", "customer", "products" ],
+  "additionalProperties": false,
+  "definitions": {
+    "customer": {
+      "title": "customer",
+      "description": "customer of order",
+      "type": "object",
+      "properties": {
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "mobile": {
+          "type": "string"
+        }
+      },
+      "required": [ "lastName", "mobile" ],
+      "additionalItems": false
+    }
+  }
+}
