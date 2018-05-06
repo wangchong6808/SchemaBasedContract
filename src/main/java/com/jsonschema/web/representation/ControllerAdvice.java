@@ -1,0 +1,21 @@
+package com.jsonschema.web.representation;
+
+import com.jsonschema.exception.SchemaViolatedException;
+import com.jsonschema.web.error.ErrorResult;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+@Slf4j
+@RestControllerAdvice
+public class ControllerAdvice {
+
+    @ExceptionHandler(SchemaViolatedException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResult handleSchemaViolatedException(SchemaViolatedException e) {
+        log.error(e.getMessage(), e);
+        return new ErrorResult("schema_violated", e.getSchema() + ":" + e.getReport().toString());
+    }
+}

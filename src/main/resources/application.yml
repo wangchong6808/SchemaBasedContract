@@ -9,3 +9,9 @@ logging:
 spring:
   thymeleaf:
     cache: false
+  cloud:
+    config:
+      discovery:
+        enabled: false
+      enabled: false
+      fail-fast: true

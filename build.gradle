@@ -1,9 +1,15 @@
+buildscript {
+	dependencies {
+		classpath "io.spring.gradle:dependency-management-plugin:0.5.6.RELEASE"
+	}
+}
 plugins {
 	id 'org.springframework.boot' version '2.0.1.RELEASE'
 	id 'java'
 }
 
 apply plugin: 'io.spring.dependency-management'
+apply plugin: 'project-report'
 
 
 jar {
@@ -13,10 +19,22 @@ jar {
 
 repositories {
 	jcenter()
+	maven {
+		url 'https://repo.spring.io/libs-milestone'
+	}
+}
+
+dependencyManagement {
+	imports {
+		mavenBom 'org.springframework.cloud:spring-cloud-netflix:1.4.4.RELEASE'
+	}
 }
 
 dependencies {
 	compile "org.springframework.boot:spring-boot-starter-web"
+	compile "org.springframework.cloud:spring-cloud-netflix-core"
+	compile 'org.springframework.cloud:spring-cloud-starter-eureka'
+	compile 'org.springframework.cloud:spring-cloud-starter-openfeign'
 	compile 'org.projectlombok:lombok:1.16.14'
 	//compile 'org.aspectj:aspectjrt:1.8.10'
 	compile 'org.springframework:spring-aop'
@@ -24,4 +42,11 @@ dependencies {
 	compile 'com.fasterxml.jackson.datatype:jackson-datatype-joda:2.8.9'
 	compile(group: "com.github.java-json-tools", name: "json-schema-validator", version: "2.2.8");
 	testCompile "org.springframework.boot:spring-boot-starter-test"
+	testCompile 'org.springframework:spring-test'
+	testCompile "org.junit.jupiter:junit-jupiter-api:5.2.0"
+	testCompile "org.junit.jupiter:junit-jupiter-engine:5.2.0"
+	testCompile "org.junit.jupiter:junit-jupiter-params:5.2.0"
+	testCompile "org.junit.platform:junit-platform-launcher:5.2.0"
+	testCompile "org.junit.platform:junit-platform-runner:5.2.0"
+	testCompile "com.github.sbrannen:spring-test-junit5:5.2.0"
 }

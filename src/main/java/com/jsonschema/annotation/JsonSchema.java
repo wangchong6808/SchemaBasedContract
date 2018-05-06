@@ -11,8 +11,8 @@ public @interface JsonSchema {
 
     String ns() default "";
 
-    String requestSchema() default "";
+    String inputSchema() default "";
 
-    String responseSchema() default "";
+    String outputSchema() default "";
 
 }

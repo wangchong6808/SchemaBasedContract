@@ -1,4 +1,4 @@
-package com.jsonschema.web.dto;
+package com.jsonschema.web.error;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,10 +9,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Customer {
+public class ErrorResult {
 
-    private int id;
-    private String firstName;
-    private String lastName;
-    private String mobile;
+    private String errorCode;
+    private String errorMessage;
+
 }

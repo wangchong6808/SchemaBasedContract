@@ -17,11 +17,15 @@ package com.jsonschema;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.netflix.feign.EnableFeignClients;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 /**
  * @author Joe Grandja
  */
 @SpringBootApplication
+@EnableAspectJAutoProxy
+@EnableFeignClients(basePackages = {"com.jsonschema"})
 public class HelloWorldApplication {
 
 	public static void main(String[] args) {

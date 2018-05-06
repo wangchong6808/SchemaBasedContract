@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "order output",
+  "description": "customer",
+  "type": "object",
+  "properties": {
+    "id" : {
+      "type" : "integer"
+    },
+    "firstName": {
+      "type": "string"
+    },
+    "lastName": {
+      "type": "string"
+    },
+    "mobile": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "lastName",
+    "mobile"
+  ],
+  "additionalItems": false
+}

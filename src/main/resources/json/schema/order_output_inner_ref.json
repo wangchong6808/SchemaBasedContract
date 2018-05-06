@@ -10,7 +10,7 @@
       "minimum": 10
     },
     "customer" : {
-      "$ref": "customer_input.json"
+      "$ref": "#/definitions/customer"
     },
     "products" : {
       "type" : "array",

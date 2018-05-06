@@ -3,29 +3,28 @@ package com.jsonschema.util;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.github.fge.jackson.JsonLoader;
 import com.github.fge.jsonschema.core.exceptions.ProcessingException;
 import com.github.fge.jsonschema.core.load.configuration.LoadingConfiguration;
 import com.github.fge.jsonschema.core.load.uri.URITranslatorConfiguration;
 import com.github.fge.jsonschema.core.report.ProcessingReport;
-import com.github.fge.jsonschema.examples.Utils;
 import com.github.fge.jsonschema.main.JsonSchema;
 import com.github.fge.jsonschema.main.JsonSchemaFactory;
+import com.jsonschema.exception.SchemaViolatedException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 public class JsonSchemaUtil {
 
+    private static final String NAMESPACE_PREFIX = "resource:/json/schema/";
+
     private static final ObjectMapper objectMapper = new ObjectMapper()
-            .registerModule(new Jdk8Module())
-            .registerModule(new JavaTimeModule())
             .registerModule(new JodaModule());
 
     static {
@@ -34,26 +33,19 @@ public class JsonSchemaUtil {
 
     private SchemaLoader schemaLoader = new SchemaLoader();
 
+    private static Map<String, JsonSchema> schemaMap = new HashMap<>();
+
     public static void validateObject(String ns, String schemaName, Object object) {
 
         try {
             String jsonBody = objectMapper.writeValueAsString(object);
             log.info("validate object {}", objectMapper.writeValueAsString(object));
 
-            String namespace = "resource:/json/schema/" + ns;
-
-            final URITranslatorConfiguration translatorCfg
-                    = URITranslatorConfiguration.newBuilder()
-                    .setNamespace(namespace).freeze();
-            final LoadingConfiguration cfg = LoadingConfiguration.newBuilder()
-                    .setURITranslatorConfiguration(translatorCfg).freeze();
-
-            final JsonSchemaFactory factory = JsonSchemaFactory.newBuilder()
-                    .setLoadingConfiguration(cfg).freeze();
-
-            final JsonSchema schema = factory.getJsonSchema(schemaName+".json");
+            JsonSchema schema = getSchema(ns, schemaName);
             ProcessingReport report = schema.validate(JsonLoader.fromString(jsonBody));
-            log.info("report: {}", report);
+            if (!report.isSuccess()) {
+                throw new SchemaViolatedException(report, ns + schemaName);
+            }
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         } catch (ProcessingException e) {
@@ -64,8 +56,24 @@ public class JsonSchemaUtil {
 
     }
 
-    public static void validateJson(String ns, String schemaName, String object) {
+    private static JsonSchema getSchema(String ns, String schemaName) throws ProcessingException {
+        String namespace = NAMESPACE_PREFIX + ns;
+        String schemaKey = namespace + schemaName;
+        if (schemaMap.containsKey(schemaKey)) {
+            return schemaMap.get(schemaKey);
+        }
 
+        URITranslatorConfiguration translatorCfg
+                = URITranslatorConfiguration.newBuilder()
+                .setNamespace(namespace).freeze();
+        LoadingConfiguration cfg = LoadingConfiguration.newBuilder()
+                .setURITranslatorConfiguration(translatorCfg).freeze();
+
+        JsonSchemaFactory factory = JsonSchemaFactory.newBuilder()
+                .setLoadingConfiguration(cfg).freeze();
+        JsonSchema schema = factory.getJsonSchema(schemaName+".json");
+        schemaMap.put(schemaKey, schema);
+        return schema;
     }
 
 }
