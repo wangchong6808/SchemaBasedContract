@@ -1,37 +1,56 @@
 buildscript {
+	ext {
+		springBootVersion = '1.5.10.RELEASE'
+	}
+	repositories {
+		mavenCentral()
+	}
 	dependencies {
-		classpath "io.spring.gradle:dependency-management-plugin:0.5.6.RELEASE"
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
 	}
 }
-plugins {
-	id 'org.springframework.boot' version '2.0.1.RELEASE'
-	id 'java'
-}
 
-apply plugin: 'io.spring.dependency-management'
-apply plugin: 'project-report'
-
-
-jar {
-	baseName = 'SpringSecurity'
-	version =  '0.0.1-SNAPSHOT'
-}
+apply plugin: 'java'
+apply plugin: 'spring-boot'
 
 repositories {
-	jcenter()
-	maven {
-		url 'https://repo.spring.io/libs-milestone'
-	}
+	mavenLocal()
+	mavenCentral()
+	maven { url 'https://ci.otr.mercedes-benz.com.cn:8443/repository/mvngroup/' }
 }
-
 dependencyManagement {
 	imports {
-		mavenBom 'org.springframework.cloud:spring-cloud-netflix:1.4.4.RELEASE'
+		mavenBom 'org.springframework.cloud:spring-cloud-starter-parent:Dalston.SR5'
 	}
 }
 
 dependencies {
-	compile "org.springframework.boot:spring-boot-starter-web"
+	compile ':spring-cloud-starter-config'
+	compile ':spring-cloud-starter-eureka'
+	compile 'org.projectlombok:lombok:1.16.14'
+	compile 'org.springframework:spring-aop'
+	compile 'org.springframework:spring-aspects'
+    compile 'com.fasterxml.jackson.datatype:jackson-datatype-joda:2.8.9'
+    compile(group: "com.github.java-json-tools", name: "json-schema-validator", version: "2.2.8")
+    compile "org.springframework.boot:spring-boot-starter-web"
+    compile "org.springframework.cloud:spring-cloud-netflix-core"
+    compile('org.springframework.cloud:spring-cloud-starter-feign')
+    compile('io.github.openfeign:feign-httpclient')
+    compile 'org.springframework.cloud:spring-cloud-starter-hystrix'
+	testCompile "org.springframework.boot:spring-boot-starter-test"
+	testCompile 'org.springframework:spring-test'
+    testCompile "com.github.sbrannen:spring-test-junit5:1.0.0"
+    testCompile "org.junit.jupiter:junit-jupiter-api:5.2.0"
+    testCompile "org.junit.jupiter:junit-jupiter-engine:5.2.0"
+    testCompile "org.junit.jupiter:junit-jupiter-params:5.2.0"
+    testCompile "org.springframework.boot:spring-boot-starter-test"
+    testCompile "org.junit.platform:junit-platform-launcher:5.2.0"
+    testCompile "org.junit.platform:junit-platform-runner:5.2.0"
+}
+
+/*
+dependencies {
+	//compile "org.springframework.boot:spring-boot-starter-web"
 	compile "org.springframework.cloud:spring-cloud-netflix-core"
 	compile 'org.springframework.cloud:spring-cloud-starter-eureka'
 	compile 'org.springframework.cloud:spring-cloud-starter-openfeign'
@@ -46,7 +65,7 @@ dependencies {
 	testCompile "org.junit.jupiter:junit-jupiter-api:5.2.0"
 	testCompile "org.junit.jupiter:junit-jupiter-engine:5.2.0"
 	testCompile "org.junit.jupiter:junit-jupiter-params:5.2.0"
-	testCompile "org.junit.platform:junit-platform-launcher:5.2.0"
-	testCompile "org.junit.platform:junit-platform-runner:5.2.0"
+	//testCompile "org.junit.platform:junit-platform-launcher:5.2.0"
+	//testCompile "org.junit.platform:junit-platform-runner:5.2.0"
 	testCompile "com.github.sbrannen:spring-test-junit5:5.2.0"
-}
+}*/

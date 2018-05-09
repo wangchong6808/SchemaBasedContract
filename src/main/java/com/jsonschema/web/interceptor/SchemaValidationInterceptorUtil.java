@@ -6,8 +6,6 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.util.StringUtils;
 
-import java.util.Arrays;
-
 public class SchemaValidationInterceptorUtil {
 
     public static void validateInput(JoinPoint joinPoint, Object content) {

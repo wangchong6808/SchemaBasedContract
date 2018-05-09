@@ -67,6 +67,5 @@ public class OrderControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.customer.mobile").value("123"))
                 .andReturn().getResponse().getContentAsString();
-
     }
 }
