@@ -9,8 +9,6 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME) @Target(METHOD)
 public @interface JsonSchema {
 
-    String ns() default "";
-
     String inputSchema() default "";
 
     String outputSchema() default "";

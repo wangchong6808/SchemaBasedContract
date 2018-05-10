@@ -15,18 +15,22 @@
  */
 package com.jsonschema.web.representation;
 
-import com.jsonschema.exception.SchemaViolatedException;
+import com.jsonschema.annotation.JsonSchema;
+import com.jsonschema.web.client.CustomerClient;
 import com.jsonschema.web.domain.OrderService;
 import com.jsonschema.web.dto.Customer;
 import com.jsonschema.web.dto.Order;
-import com.jsonschema.web.error.ErrorResult;
 import org.springframework.beans.factory.annotation.Autowired;
-import com.jsonschema.annotation.JsonSchema;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class OrderController {
+
+	@Autowired
+	CustomerClient customerClient;
 
     @Autowired
     OrderService orderService;
@@ -40,6 +44,13 @@ public class OrderController {
 		return order;
 	}
 
+
+	@RequestMapping("/order/{id}/customer")
+	@ResponseBody
+	@JsonSchema(outputSchema = "order_output")
+	public Customer getOrderCustomer(@PathVariable("id") int id) {
+		return customerClient.getCustomer(id);
+	}
 
 
 }

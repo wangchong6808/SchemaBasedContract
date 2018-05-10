@@ -11,7 +11,7 @@ buildscript {
 }
 
 apply plugin: 'java'
-apply plugin: 'spring-boot'
+apply plugin: 'org.springframework.boot'
 
 repositories {
 	mavenLocal()
@@ -25,8 +25,6 @@ dependencyManagement {
 }
 
 dependencies {
-	compile ':spring-cloud-starter-config'
-	compile ':spring-cloud-starter-eureka'
 	compile 'org.projectlombok:lombok:1.16.14'
 	compile 'org.springframework:spring-aop'
 	compile 'org.springframework:spring-aspects'
@@ -44,8 +42,12 @@ dependencies {
     testCompile "org.junit.jupiter:junit-jupiter-engine:5.2.0"
     testCompile "org.junit.jupiter:junit-jupiter-params:5.2.0"
     testCompile "org.springframework.boot:spring-boot-starter-test"
-    testCompile "org.junit.platform:junit-platform-launcher:5.2.0"
-    testCompile "org.junit.platform:junit-platform-runner:5.2.0"
+    testCompile "org.junit.platform:junit-platform-launcher:1.2.0"
+    testCompile "org.junit.platform:junit-platform-runner:1.2.0"
+	testCompile("org.springframework.cloud:spring-cloud-contract-verifier")
+	testCompile("org.springframework.cloud:spring-cloud-contract-stub-runner")
+	testCompile("org.springframework.cloud:spring-cloud-starter-contract-stub-runner")
+	testCompile("org.springframework.cloud:spring-cloud-contract-spec")
 }
 
 /*

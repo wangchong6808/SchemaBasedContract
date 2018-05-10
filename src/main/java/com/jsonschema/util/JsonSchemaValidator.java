@@ -18,11 +18,18 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 @Slf4j
-public class JsonSchemaUtil {
+public class JsonSchemaValidator {
 
-    private static final String NAMESPACE_PREFIX = "resource:/json/schema/";
+    private static final String NAMESPACE_PREFIX = "resource:/schema/json/";
+
+    private ClasspathSchemaLoader schemaLoader;
+
+    public JsonSchemaValidator(ClasspathSchemaLoader schemaLoader) {
+        this.schemaLoader = schemaLoader;
+    }
 
     private static final ObjectMapper objectMapper = new ObjectMapper()
             .registerModule(new JodaModule());
@@ -31,20 +38,16 @@ public class JsonSchemaUtil {
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
     }
 
-    private SchemaLoader schemaLoader = new SchemaLoader();
-
-    private static Map<String, JsonSchema> schemaMap = new HashMap<>();
-
-    public static void validateObject(String ns, String schemaName, Object object) {
+    public void validateObject(String schemaId, Object object) {
 
         try {
             String jsonBody = objectMapper.writeValueAsString(object);
             log.info("validate object {}", objectMapper.writeValueAsString(object));
 
-            JsonSchema schema = getSchema(ns, schemaName);
+            JsonSchema schema = schemaLoader.getSchema(schemaId);
             ProcessingReport report = schema.validate(JsonLoader.fromString(jsonBody));
             if (!report.isSuccess()) {
-                throw new SchemaViolatedException(report, ns + schemaName);
+                throw new SchemaViolatedException(report, schemaId);
             }
         } catch (JsonProcessingException e) {
             e.printStackTrace();
@@ -56,24 +59,6 @@ public class JsonSchemaUtil {
 
     }
 
-    private static JsonSchema getSchema(String ns, String schemaName) throws ProcessingException {
-        String namespace = NAMESPACE_PREFIX + ns;
-        String schemaKey = namespace + schemaName;
-        if (schemaMap.containsKey(schemaKey)) {
-            return schemaMap.get(schemaKey);
-        }
 
-        URITranslatorConfiguration translatorCfg
-                = URITranslatorConfiguration.newBuilder()
-                .setNamespace(namespace).freeze();
-        LoadingConfiguration cfg = LoadingConfiguration.newBuilder()
-                .setURITranslatorConfiguration(translatorCfg).freeze();
-
-        JsonSchemaFactory factory = JsonSchemaFactory.newBuilder()
-                .setLoadingConfiguration(cfg).freeze();
-        JsonSchema schema = factory.getJsonSchema(schemaName+".json");
-        schemaMap.put(schemaKey, schema);
-        return schema;
-    }
 
 }

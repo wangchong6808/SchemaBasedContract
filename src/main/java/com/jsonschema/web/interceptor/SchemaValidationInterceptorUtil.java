@@ -1,14 +1,23 @@
 package com.jsonschema.web.interceptor;
 
 import com.jsonschema.annotation.JsonSchema;
-import com.jsonschema.util.JsonSchemaUtil;
+import com.jsonschema.exception.SchemaViolatedException;
+import com.jsonschema.util.JsonSchemaValidator;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.util.StringUtils;
 
+@Slf4j
 public class SchemaValidationInterceptorUtil {
 
-    public static void validateInput(JoinPoint joinPoint, Object content) {
+    private JsonSchemaValidator jsonSchemaValidator;
+
+    public SchemaValidationInterceptorUtil(JsonSchemaValidator jsonSchemaValidator) {
+        this.jsonSchemaValidator = jsonSchemaValidator;
+    }
+
+    public void validateInput(JoinPoint joinPoint, Object content) {
         if (content == null) {
             return;
         }
@@ -17,10 +26,15 @@ public class SchemaValidationInterceptorUtil {
         if (!StringUtils.hasText(inputSchema)) {
             return;
         }
-        JsonSchemaUtil.validateObject(annotation.ns(), inputSchema, content);
+        try {
+            jsonSchemaValidator.validateObject(inputSchema, content);
+        } catch (SchemaViolatedException e) {
+            log.error(joinPoint.getTarget().getClass().getName(), e);
+            throw e;
+        }
     }
 
-    public static void validateOutput(JoinPoint joinPoint, Object content) {
+    public void validateOutput(JoinPoint joinPoint, Object content) {
         if (content == null) {
             return;
         }
@@ -29,7 +43,12 @@ public class SchemaValidationInterceptorUtil {
         if (!StringUtils.hasText(outputSchema)) {
             return;
         }
-        JsonSchemaUtil.validateObject(annotation.ns(), outputSchema, content);
+        try {
+            jsonSchemaValidator.validateObject(outputSchema, content);
+        } catch (SchemaViolatedException e) {
+            log.error(joinPoint.getTarget().getClass().getName(), e);
+            throw e;
+        }
     }
 
     private static JsonSchema getSchemaAnnotation(JoinPoint joinPoint){
