@@ -3,6 +3,7 @@ package com.jsonschema.web.interceptor;
 import com.jsonschema.annotation.JsonSchema;
 import com.jsonschema.exception.SchemaViolatedException;
 import com.jsonschema.util.JsonSchemaValidator;
+import com.jsonschema.validation.ValidationContext;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
@@ -26,12 +27,10 @@ public class SchemaValidationInterceptorUtil {
         if (!StringUtils.hasText(inputSchema)) {
             return;
         }
-        try {
-            jsonSchemaValidator.validateObject(inputSchema, content);
-        } catch (SchemaViolatedException e) {
-            log.error(joinPoint.getTarget().getClass().getName(), e);
-            throw e;
-        }
+        ValidationContext context = ValidationContext.builder()
+                .triggerPoint(joinPoint.getTarget().getClass().getName())
+                .schemaId(inputSchema).build();
+        jsonSchemaValidator.validateObject(context, content);
     }
 
     public void validateOutput(JoinPoint joinPoint, Object content) {
@@ -43,12 +42,10 @@ public class SchemaValidationInterceptorUtil {
         if (!StringUtils.hasText(outputSchema)) {
             return;
         }
-        try {
-            jsonSchemaValidator.validateObject(outputSchema, content);
-        } catch (SchemaViolatedException e) {
-            log.error(joinPoint.getTarget().getClass().getName(), e);
-            throw e;
-        }
+        ValidationContext context = ValidationContext.builder()
+                .triggerPoint(joinPoint.getTarget().getClass().getName())
+                .schemaId(outputSchema).build();
+        jsonSchemaValidator.validateObject(context, content);
     }
 
     private static JsonSchema getSchemaAnnotation(JoinPoint joinPoint){

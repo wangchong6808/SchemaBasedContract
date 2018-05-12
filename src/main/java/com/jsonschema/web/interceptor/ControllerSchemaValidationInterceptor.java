@@ -2,6 +2,7 @@ package com.jsonschema.web.interceptor;
 
 import com.jsonschema.util.ClasspathSchemaLoader;
 import com.jsonschema.util.JsonSchemaValidator;
+import com.jsonschema.validation.ValidationContext;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -35,9 +36,9 @@ public class ControllerSchemaValidationInterceptor {
     @PostConstruct
     public void init() throws IOException {
         Properties properties = new Properties();
-        properties.load(getClass().getResourceAsStream("schema_config.properties"));
+        properties.load(ControllerSchemaValidationInterceptor.class.getResourceAsStream("/schema/json/schema_config.properties"));
 
-        ClasspathSchemaLoader schemaLoader = new ClasspathSchemaLoader("resource:/schema/json/", properties);
+        ClasspathSchemaLoader schemaLoader = new ClasspathSchemaLoader("resource:/schema/json/", properties, true);
         schemaValidationInterceptorUtil = new SchemaValidationInterceptorUtil(new JsonSchemaValidator(schemaLoader));
     }
 }

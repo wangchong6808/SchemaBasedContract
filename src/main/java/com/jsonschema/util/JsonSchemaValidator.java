@@ -7,18 +7,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
 import com.github.fge.jackson.JsonLoader;
 import com.github.fge.jsonschema.core.exceptions.ProcessingException;
-import com.github.fge.jsonschema.core.load.configuration.LoadingConfiguration;
-import com.github.fge.jsonschema.core.load.uri.URITranslatorConfiguration;
+import com.github.fge.jsonschema.core.report.ListProcessingReport;
 import com.github.fge.jsonschema.core.report.ProcessingReport;
 import com.github.fge.jsonschema.main.JsonSchema;
-import com.github.fge.jsonschema.main.JsonSchemaFactory;
 import com.jsonschema.exception.SchemaViolatedException;
+import com.jsonschema.exception.ValidationProcessingException;
+import com.jsonschema.validation.ValidationContext;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
 
 @Slf4j
 public class JsonSchemaValidator {
@@ -38,27 +35,21 @@ public class JsonSchemaValidator {
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
     }
 
-    public void validateObject(String schemaId, Object object) {
+    public void validateObject(ValidationContext context, Object object) {
 
         try {
             String jsonBody = objectMapper.writeValueAsString(object);
-            log.info("validate object {}", objectMapper.writeValueAsString(object));
 
-            JsonSchema schema = schemaLoader.getSchema(schemaId);
+            JsonSchema schema = schemaLoader.getSchema(context.getSchemaId());
             ProcessingReport report = schema.validate(JsonLoader.fromString(jsonBody));
+            context.setPayload(jsonBody);
             if (!report.isSuccess()) {
-                throw new SchemaViolatedException(report, schemaId);
+                throw new SchemaViolatedException(report, context);
             }
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        } catch (ProcessingException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (ProcessingException | IOException e) {
+            throw new ValidationProcessingException("unexpected error happened during schema validating. "
+                    + e.getMessage(), e);
         }
-
     }
-
-
 
 }

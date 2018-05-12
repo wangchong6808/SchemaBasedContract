@@ -1,41 +1,23 @@
 package com.jsonschema.exception;
 
 import com.github.fge.jsonschema.core.report.ProcessingReport;
+import com.jsonschema.validation.ValidationContext;
 
 public class SchemaViolatedException extends RuntimeException {
     private ProcessingReport report;
-    private String schema;
+    private ValidationContext context;
 
-    public SchemaViolatedException() {
-    }
-
-    public SchemaViolatedException(String message) {
-        super(message);
-    }
-
-    public SchemaViolatedException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public SchemaViolatedException(ProcessingReport report, String schema) {
-        super("schema '"+ schema +"' violated.");
+    public SchemaViolatedException(ProcessingReport report, ValidationContext context) {
+        super("schema violated. : " + context.getSchemaId());
         this.report = report;
-        this.schema = schema;
+        this.context = context;
     }
 
     public ProcessingReport getReport() {
         return report;
     }
 
-    public void setReport(ProcessingReport report) {
-        this.report = report;
-    }
-
-    public String getSchema() {
-        return schema;
-    }
-
-    public void setSchema(String schema) {
-        this.schema = schema;
+    public ValidationContext getContext() {
+        return context;
     }
 }
