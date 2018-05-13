@@ -15,3 +15,7 @@ spring:
         enabled: false
       enabled: false
       fail-fast: true
+
+validation:
+  schema:
+    devmode: true

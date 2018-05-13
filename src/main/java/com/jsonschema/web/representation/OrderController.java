@@ -36,18 +36,18 @@ public class OrderController {
     OrderService orderService;
 
 
-	@RequestMapping("/order/{id}")
+	@RequestMapping("/orders/{id}")
 	@ResponseBody
 	@JsonSchema(outputSchema = "1003")
 	public Order getOrder(@PathVariable("id") int id) {
-	    Order order = orderService.getOrder(id);
+	    Order order = orderService.getOrder(id + 10);
 		return order;
 	}
 
 
-	@RequestMapping("/order/{id}/customer")
+	@RequestMapping("/orders/{id}/customer")
 	@ResponseBody
-	@JsonSchema(outputSchema = "1003")
+	@JsonSchema(outputSchema = "1002")
 	public Customer getOrderCustomer(@PathVariable("id") int id) {
 		return customerClient.getCustomer(id);
 	}

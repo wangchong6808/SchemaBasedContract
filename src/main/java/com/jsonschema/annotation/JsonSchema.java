@@ -13,4 +13,6 @@ public @interface JsonSchema {
 
     String outputSchema() default "";
 
+    String remoteSchema() default "";
+
 }

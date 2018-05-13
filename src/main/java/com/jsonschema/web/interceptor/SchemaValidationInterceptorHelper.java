@@ -10,11 +10,11 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.util.StringUtils;
 
 @Slf4j
-public class SchemaValidationInterceptorUtil {
+public class SchemaValidationInterceptorHelper {
 
     private JsonSchemaValidator jsonSchemaValidator;
 
-    public SchemaValidationInterceptorUtil(JsonSchemaValidator jsonSchemaValidator) {
+    public SchemaValidationInterceptorHelper(JsonSchemaValidator jsonSchemaValidator) {
         this.jsonSchemaValidator = jsonSchemaValidator;
     }
 
@@ -34,9 +34,6 @@ public class SchemaValidationInterceptorUtil {
     }
 
     public void validateOutput(JoinPoint joinPoint, Object content) {
-        if (content == null) {
-            return;
-        }
         JsonSchema annotation = getSchemaAnnotation(joinPoint);
         String outputSchema = annotation.outputSchema();
         if (!StringUtils.hasText(outputSchema)) {

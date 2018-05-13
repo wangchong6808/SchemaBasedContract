@@ -20,7 +20,8 @@
   "required": [
     "id",
     "lastName",
-    "mobile"
+    "mobile",
+    "firstName"
   ],
   "additionalItems": false
 }

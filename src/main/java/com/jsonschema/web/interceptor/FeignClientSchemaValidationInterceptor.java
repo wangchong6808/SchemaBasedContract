@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -17,7 +18,10 @@ import java.util.Properties;
 @Component
 public class FeignClientSchemaValidationInterceptor {
 
-    SchemaValidationInterceptorUtil schemaValidationInterceptorUtil;
+    @Value("${validation.schema.devmode:false}")
+    private boolean devMode;
+
+    SchemaValidationInterceptorHelper schemaValidationInterceptorUtil;
 
     @AfterReturning(value = "target(com.jsonschema.web.client.SchemaAwareClient)", returning = "response")
     public void validateResponse(JoinPoint joinPoint, Object response) {
@@ -29,7 +33,7 @@ public class FeignClientSchemaValidationInterceptor {
         Properties properties = new Properties();
         properties.load(ControllerSchemaValidationInterceptor.class.getResourceAsStream("/schema/json/schema_config.properties"));
 
-        ClasspathSchemaLoader schemaLoader = new ClasspathSchemaLoader("resource:/schema/json/", properties, true);
-        schemaValidationInterceptorUtil = new SchemaValidationInterceptorUtil(new JsonSchemaValidator(schemaLoader));
+        ClasspathSchemaLoader schemaLoader = new ClasspathSchemaLoader("resource:/schema/json/", properties, devMode);
+        schemaValidationInterceptorUtil = new SchemaValidationInterceptorHelper(new JsonSchemaValidator(schemaLoader));
     }
 }

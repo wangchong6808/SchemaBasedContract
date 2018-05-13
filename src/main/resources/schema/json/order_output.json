@@ -10,7 +10,7 @@
       "minimum": 10
     },
     "customer" : {
-      "$ref": "customer_input.json"
+      "$ref": "customer_output.json"
     },
     "products" : {
       "type" : "array",
@@ -31,25 +31,5 @@
       }
     }
   },
-  "additionalProperties": false,
-  "definitions": {
-    "customer": {
-      "title": "customer",
-      "description": "customer of order",
-      "type": "object",
-      "properties": {
-        "firstName": {
-          "type": "string"
-        },
-        "lastName": {
-          "type": "string"
-        },
-        "mobile": {
-          "type": "string"
-        }
-      },
-      "required": [ "lastName", "mobile" ],
-      "additionalItems": false
-    }
-  }
+  "additionalProperties": false
 }

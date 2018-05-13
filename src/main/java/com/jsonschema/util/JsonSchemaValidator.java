@@ -20,8 +20,6 @@ import java.io.IOException;
 @Slf4j
 public class JsonSchemaValidator {
 
-    private static final String NAMESPACE_PREFIX = "resource:/schema/json/";
-
     private ClasspathSchemaLoader schemaLoader;
 
     public JsonSchemaValidator(ClasspathSchemaLoader schemaLoader) {

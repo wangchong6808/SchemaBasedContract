@@ -7,6 +7,7 @@ import com.github.fge.jsonschema.main.JsonSchema;
 import com.github.fge.jsonschema.main.JsonSchemaFactory;
 import com.jsonschema.exception.FailedToLoadSchemaException;
 
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -39,15 +40,19 @@ public class ClasspathSchemaLoader {
         if (schemaMap.containsKey(schemaId)) {
             return schemaMap.get(schemaId);
         }
+        String schemaFile = (String) schemaConfig.get(schemaId);
+        if (schemaFile == null) {
+            throw new FailedToLoadSchemaException("schema config not found : "+schemaId, schemaId);
+        }
 
         try {
-            JsonSchema schema = factory.getJsonSchema((String) schemaConfig.get(schemaId));
+            JsonSchema schema = factory.getJsonSchema(schemaFile);
             if (cacheSchema) {
                 schemaMap.put(schemaId, schema);
             }
             return schema;
         } catch (ProcessingException e) {
-            throw new FailedToLoadSchemaException("failed to load schema " + schemaId, e);
+            throw new FailedToLoadSchemaException("failed to load schema : " + schemaId, e, schemaId);
         }
     }
 }

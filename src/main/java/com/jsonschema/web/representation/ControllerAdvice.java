@@ -23,4 +23,11 @@ public class ControllerAdvice {
         return new ErrorResult("schema_violated", "schemaId:" + context.getSchemaId());
     }
 
+    @ExceptionHandler(FailedToLoadSchemaException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResult handleSchemaViolatedException(FailedToLoadSchemaException e) {
+        log.error(e.getMessage(), e);
+        return new ErrorResult("schema_load_failure", "schemaId:" + e.getSchemaId());
+    }
+
 }
