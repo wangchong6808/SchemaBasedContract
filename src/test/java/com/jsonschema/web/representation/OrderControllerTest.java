@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith({JsonSchemaExtension.class, SpringExtension.class})
+@ExtendWith({SpringExtension.class})
 @SpringBootTest
 @AutoConfigureMockMvc
 @EnableAspectJAutoProxy
@@ -42,11 +42,11 @@ public class OrderControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-   /* @MockBean
-    OrderService orderService;*/
+   //@MockBean
+   // OrderService orderService;
 
    //@MockBean
-   @MockBean
+   //@MockRemoteBean
    CustomerClient customerClient;
 
     @BeforeEach

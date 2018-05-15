@@ -1,7 +1,10 @@
 package com.jsonschema.aop;
 
-import org.springframework.boot.test.mock.mockito.MockBean;
+import java.lang.annotation.*;
 
-@MockBean
+@Target({ ElementType.TYPE, ElementType.FIELD })
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Repeatable(MockRemoteBeans.class)
 public @interface MockRemoteBean {
 }
