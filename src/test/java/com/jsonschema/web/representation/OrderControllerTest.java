@@ -35,40 +35,24 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @EnableAspectJAutoProxy
-@ComponentScan(basePackageClasses={HelloWorldApplication.class})
+@ComponentScan(basePackageClasses = {HelloWorldApplication.class})
 @TestExecutionListeners(listeners = {SchemaTestExecutionListener.class}, mergeMode = MERGE_WITH_DEFAULTS)
 public class OrderControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
-   //@MockBean
-   // OrderService orderService;
-
-   //@MockBean
-   //@MockRemoteBean
-   CustomerClient customerClient;
+    @MockRemoteBean
+    CustomerClient customerClient;
 
     @BeforeEach
     void setUp() {
-        //System.out.println("");
-        /*Mockito.when(orderService.getOrder(Mockito.anyInt())).thenAnswer(invocation -> {
-            int orderId = Integer.valueOf(String.valueOf(invocation.getArguments()[0]));
-            Product product1 = Product.builder().code("code1").name("手机").description("华为P20").build();
-            Product product2 = Product.builder().code("code2").name("电池").description("华为P20电池").build();
-            List<Product> products = new ArrayList<>();
-            products.add(product1);
-            products.add(product2);
-            return Order.builder().id(orderId).customer(Customer.builder().lastName("张").firstName("三")
-                    .mobile("123").build()).products(products).build();
-        });*/
-
         Mockito.when(customerClient.getCustomer(Mockito.anyInt())).thenReturn(Customer.builder().firstName("firstName").lastName("lastName").build());
     }
 
     @Test
     void should_return_order() throws Exception {
-        String s= this.mockMvc.perform(post("/orders/10"))
+        String s = this.mockMvc.perform(post("/orders/10"))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
