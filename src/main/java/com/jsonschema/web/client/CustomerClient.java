@@ -15,5 +15,5 @@ public interface CustomerClient extends SchemaAwareClient {
 
     @GetMapping("/customers/{id}")
     @JsonSchema(outputSchema = "1002")
-    Customer getCustomer(@PathVariable("id") int id);
+    Customer getCustomer(@PathVariable("id") Integer id);
 }
