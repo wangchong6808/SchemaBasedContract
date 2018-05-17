@@ -13,6 +13,10 @@ public class SchemaViolatedException extends RuntimeException {
         this.context = context;
     }
 
+    public SchemaViolatedException(ProcessingReport report) {
+        this.report = report;
+    }
+
     public ProcessingReport getReport() {
         return report;
     }
