@@ -26,7 +26,7 @@ public class OrderService {
         products.add(product1);
         products.add(product2);
         Order order = Order.builder().id(orderId).customer(Customer.builder().lastName("张").build()).products(products).build();
-        order.setCustomer(customerClient.getCustomer(12));
+        order.setCustomer(customerClient.getCustomer(orderId));
         return order;
     }
 }

@@ -35,13 +35,13 @@ dependencies {
     compile('org.springframework.cloud:spring-cloud-starter-feign')
     compile('io.github.openfeign:feign-httpclient')
     compile 'org.springframework.cloud:spring-cloud-starter-hystrix'
-	testCompile "org.springframework.boot:spring-boot-starter-unittest"
-	testCompile 'org.springframework:spring-unittest'
-    testCompile "com.github.sbrannen:spring-unittest-junit5:1.0.0"
+	testCompile "org.springframework.boot:spring-boot-starter-test"
+	testCompile 'org.springframework:spring-test'
+    testCompile "com.github.sbrannen:spring-test-junit5:1.0.0"
     testCompile "org.junit.jupiter:junit-jupiter-api:5.2.0"
     testCompile "org.junit.jupiter:junit-jupiter-engine:5.2.0"
     testCompile "org.junit.jupiter:junit-jupiter-params:5.2.0"
-    testCompile "org.springframework.boot:spring-boot-starter-unittest"
+    testCompile "org.springframework.boot:spring-boot-starter-test"
     testCompile "org.junit.platform:junit-platform-launcher:1.2.0"
     testCompile "org.junit.platform:junit-platform-runner:1.2.0"
 	testCompile("org.springframework.cloud:spring-cloud-contract-verifier")

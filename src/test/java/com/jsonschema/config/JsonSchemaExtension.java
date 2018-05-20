@@ -13,22 +13,12 @@ public class JsonSchemaExtension implements TestInstancePostProcessor, BeforeAll
         ParameterResolver, BeforeTestExecutionCallback {
 
     @Override
-    public void postProcessTestInstance(Object testInstance, ExtensionContext context) throws Exception {
-        //Object testInstance = context.getTestInstance().get();
-        /*Field field = testInstance.getClass().getDeclaredField("customerClient");
-        field.setAccessible(true);
-        CustomerClient client = Mockito.mock(CustomerClient.class);
-        AspectJProxyFactory factory = new AspectJProxyFactory(client);
-        MyAspect aspect = new MyAspect();
-        factory.addAspect(aspect);
-        CustomerClient proxy = factory.getProxy();
-        ReflectionTestUtils.setField(testInstance, "customerClient", proxy);*/
+    public void postProcessTestInstance(Object testInstance, ExtensionContext context) {
         for (Field field : testInstance.getClass().getDeclaredFields()) {
             if (field.getAnnotation(MockRemoteBean.class) != null) {
                 Object mock = MockBeanUtil.mockBean(field.getType());
                 field.setAccessible(true);
                 ReflectionTestUtils.setField(testInstance, field.getName(), mock);
-                System.out.println("found mock");
             }
         }
         log.info("testInstance is : " + testInstance);
@@ -36,12 +26,12 @@ public class JsonSchemaExtension implements TestInstancePostProcessor, BeforeAll
     }
 
     @Override
-    public void afterAll(ExtensionContext context) throws Exception {
+    public void afterAll(ExtensionContext context) {
         log.info("after all callback");
     }
 
     @Override
-    public void beforeAll(ExtensionContext context) throws Exception {
+    public void beforeAll(ExtensionContext context) {
         log.info("before all callback");
     }
 
@@ -58,7 +48,7 @@ public class JsonSchemaExtension implements TestInstancePostProcessor, BeforeAll
     }
 
     @Override
-    public void beforeTestExecution(ExtensionContext context) throws Exception {
+    public void beforeTestExecution(ExtensionContext context) {
         System.out.println("beforeTestExecution");
 
     }

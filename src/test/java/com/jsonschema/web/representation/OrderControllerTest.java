@@ -44,7 +44,7 @@ public class OrderControllerTest {
 
     @Test
     void should_return_400_due_to_remote_schema_validation_failure() throws Exception {
-        Mockito.when(customerClient.getCustomer(Mockito.anyInt())).thenReturn(Customer.builder().id(12).lastName("lastName").build());
+        Mockito.when(customerClient.getCustomer(10)).thenReturn(Customer.builder().id(12).lastName("lastName").build());
         this.mockMvc.perform(post("/orders/10"))
                 .andExpect(status().is(400));
 
@@ -52,7 +52,7 @@ public class OrderControllerTest {
 
     @Test
     void should_return_400_due_to_controller_schema_validation_failure() throws Exception {
-        Mockito.when(customerClient.getCustomer(Mockito.anyInt())).thenReturn(Customer.builder().id(12).mobile("123").firstName("first").lastName("lastName").build());
+        Mockito.when(customerClient.getCustomer(8)).thenReturn(Customer.builder().id(8).mobile("123").firstName("first").lastName("lastName").build());
         this.mockMvc.perform(post("/orders/8"))
                 .andExpect(status().is(400));
 
@@ -60,7 +60,7 @@ public class OrderControllerTest {
 
     @Test
     void should_return_200_given_valid_customer_and_order_info() throws Exception {
-        Mockito.when(customerClient.getCustomer(Mockito.anyInt())).thenReturn(Customer.builder().id(12).mobile("123").firstName("first").lastName("lastName").build());
+        Mockito.when(customerClient.getCustomer(18)).thenReturn(Customer.builder().id(18).mobile("123").firstName("first").lastName("lastName").build());
         this.mockMvc.perform(post("/orders/18"))
                 .andExpect(status().is(200));
 
