@@ -29,10 +29,14 @@ public class MyAspect {
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
     }
 
+    private static final String PROXY_CALLBACK_METHOD_NAME = "getCallback";
+
 
     @AfterReturning(value = "target(com.jsonschema.web.client.SchemaAwareClient)", returning = "response")
     public void after(JoinPoint joinPoint, Object response) throws Throwable {
-        //Class<? extends Object> cls = joinPoint.getTarget().getClass();
+        if (PROXY_CALLBACK_METHOD_NAME.equals(joinPoint.getSignature().getName())) {
+            return;
+        }
         JsonSchema schema = retrieveMethodAnnotationFrom((ProceedingJoinPoint) joinPoint, JsonSchema.class);
         System.out.println("got you " + joinPoint.getSignature() + " " + schema);
         FeignClient feignClient = retrieveClassAnnotation((ProceedingJoinPoint) joinPoint, FeignClient.class);
