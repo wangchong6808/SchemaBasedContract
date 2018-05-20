@@ -1,25 +1,39 @@
 package com.jsonschema.test;
 
-import com.jsonschema.aop.MyAspect;
-import com.jsonschema.aop.MyTarget;
+import com.jsonschema.aop.*;
+import com.jsonschema.exception.SchemaViolatedException;
 import com.jsonschema.web.client.CustomerClient;
 import com.jsonschema.web.dto.Customer;
+import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.aop.aspectj.annotation.AspectJProxyFactory;
+import org.mockito.MockitoAnnotations;
 
+@ExtendWith(JsonSchemaExtension.class)
 public class CustomerContractTest {
 
 
+    @MockRemoteBean
+    private CustomerClient customerClient;
+
 
     @Test
-    void testClient() {
-        CustomerClient client = Mockito.mock(CustomerClient.class);
-        Mockito.when(client.getCustomer(Mockito.anyInt())).thenReturn(Customer.builder().firstName("FN").lastName("last").build());
-        AspectJProxyFactory factory = new AspectJProxyFactory(client);
-        MyAspect aspect = new MyAspect();
-        factory.addAspect(aspect);
-        CustomerClient proxy = factory.getProxy();
-        proxy.getCustomer(2);
+    void should_validate_successfully() {
+        Mockito.when(customerClient.getCustomer(Mockito.anyInt())).thenReturn(Customer.builder().id(5).firstName("FN").lastName("last").build());
+        SchemaDetector.detect(customerClient).getCustomer(2);
     }
+
+    @Test
+    void should_validate_failed() {
+        Assertions.assertThrows(SchemaViolatedException.class, () -> {
+            Mockito.when(customerClient.getCustomer(Mockito.anyInt())).thenReturn(Customer.builder().id(5).lastName("last").build());
+            SchemaDetector.detect(customerClient).getCustomer(2);
+            Assert.fail("schema is supposed to be violated because firstName is required.");
+        });
+    }
+
 }

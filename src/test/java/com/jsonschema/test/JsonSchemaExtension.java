@@ -1,12 +1,9 @@
 package com.jsonschema.test;
 
-import com.jsonschema.aop.MyAspect;
-import com.jsonschema.aop.MyTarget;
-import com.jsonschema.web.client.CustomerClient;
+import com.jsonschema.aop.MockBeanUtil;
+import com.jsonschema.aop.MockRemoteBean;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.extension.*;
-import org.mockito.Mockito;
-import org.springframework.aop.aspectj.annotation.AspectJProxyFactory;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.lang.reflect.Field;
@@ -26,6 +23,14 @@ public class JsonSchemaExtension implements TestInstancePostProcessor, BeforeAll
         factory.addAspect(aspect);
         CustomerClient proxy = factory.getProxy();
         ReflectionTestUtils.setField(testInstance, "customerClient", proxy);*/
+        for (Field field : testInstance.getClass().getDeclaredFields()) {
+            if (field.getAnnotation(MockRemoteBean.class) != null) {
+                Object mock = MockBeanUtil.mockBean(field.getType());
+                field.setAccessible(true);
+                ReflectionTestUtils.setField(testInstance, field.getName(), mock);
+                System.out.println("found mock");
+            }
+        }
         log.info("testInstance is : " + testInstance);
         log.info("ExtensionContext is : " + context);
     }

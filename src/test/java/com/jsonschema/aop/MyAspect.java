@@ -34,7 +34,13 @@ public class MyAspect {
 
     @AfterReturning(value = "target(com.jsonschema.web.client.SchemaAwareClient)", returning = "response")
     public void after(JoinPoint joinPoint, Object response) throws Throwable {
-        if (PROXY_CALLBACK_METHOD_NAME.equals(joinPoint.getSignature().getName())) {
+        if ("toString".equals(joinPoint.getSignature().getName()) || PROXY_CALLBACK_METHOD_NAME.equals(joinPoint.getSignature().getName())) {
+            return;
+        }
+        if (joinPoint.getTarget().getClass().getName().startsWith("com.sun.proxy")) {
+            return;
+        }
+        if (response == null) {
             return;
         }
         JsonSchema schema = retrieveMethodAnnotationFrom((ProceedingJoinPoint) joinPoint, JsonSchema.class);

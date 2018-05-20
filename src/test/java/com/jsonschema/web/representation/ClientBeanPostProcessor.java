@@ -20,16 +20,7 @@ public class ClientBeanPostProcessor implements BeanFactoryPostProcessor {
     @Override
     public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
         for (String className : beanDefinitions.keySet()) {
-            try {
-                Object mock = Mockito.mock(Class.forName(className));
-                AspectJProxyFactory factory = new AspectJProxyFactory(mock);
-                MyAspect aspect = new MyAspect();
-                factory.addAspect(aspect);
-                Object proxy = factory.getProxy();
-                beanFactory.registerSingleton(className, proxy);
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
+            beanFactory.registerSingleton(className, beanDefinitions.get(className));
         }
     }
 

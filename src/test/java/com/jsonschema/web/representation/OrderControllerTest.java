@@ -2,12 +2,14 @@ package com.jsonschema.web.representation;
 
 import com.jsonschema.HelloWorldApplication;
 import com.jsonschema.aop.MockRemoteBean;
+import com.jsonschema.exception.SchemaViolatedException;
 import com.jsonschema.test.JsonSchemaExtension;
 import com.jsonschema.web.client.CustomerClient;
 import com.jsonschema.web.domain.OrderService;
 import com.jsonschema.web.dto.Customer;
 import com.jsonschema.web.dto.Order;
 import com.jsonschema.web.dto.Product;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -47,30 +49,30 @@ public class OrderControllerTest {
 
     @BeforeEach
     void setUp() {
-        Mockito.when(customerClient.getCustomer(Mockito.anyInt())).thenReturn(Customer.builder().firstName("firstName").lastName("lastName").build());
-    }
-
-    @Test
-    void should_return_order() throws Exception {
-        String s = this.mockMvc.perform(post("/orders/10"))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
 
     }
 
     @Test
-    void should_return_order_with_id_as_10() throws Exception {
+    void should_return_400_due_to_remote_schema_validation_failure() throws Exception {
+        Mockito.when(customerClient.getCustomer(Mockito.anyInt())).thenReturn(Customer.builder().id(12).lastName("lastName").build());
         this.mockMvc.perform(post("/orders/10"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.customer.mobile").value("123"))
-                .andReturn().getResponse().getContentAsString();
+                .andExpect(status().is(400));
+
     }
 
     @Test
-    void should_return_customer_of_order() throws Exception {
-        this.mockMvc.perform(post("/orders/10/customer"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.mobile").value("123"))
-                .andReturn().getResponse().getContentAsString();
+    void should_return_400_due_to_controller_schema_validation_failure() throws Exception {
+        Mockito.when(customerClient.getCustomer(Mockito.anyInt())).thenReturn(Customer.builder().id(12).mobile("123").firstName("first").lastName("lastName").build());
+        this.mockMvc.perform(post("/orders/8"))
+                .andExpect(status().is(400));
+
+    }
+
+    @Test
+    void should_return_200_given_valid_customer_and_order_info() throws Exception {
+        Mockito.when(customerClient.getCustomer(Mockito.anyInt())).thenReturn(Customer.builder().id(12).mobile("123").firstName("first").lastName("lastName").build());
+        this.mockMvc.perform(post("/orders/18"))
+                .andExpect(status().is(200));
+
     }
 }

@@ -18,9 +18,15 @@ public class ControllerAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResult handleSchemaViolatedException(SchemaViolatedException e) {
         ValidationContext context = e.getContext();
-        log.error("schema " + context.getSchemaId() + " in " + context.getTriggerPoint()+
-                " violated. detailed report is " + e.getReport().toString(), e);
-        return new ErrorResult("schema_violated", "schemaId:" + context.getSchemaId());
+        if (context == null) {
+            log.info("schema violated");
+            return new ErrorResult("schema_violated", "schema_violated without context");
+        }else {
+            log.error("schema " + context.getSchemaId() + " in " + context.getTriggerPoint()+
+                    " violated. detailed report is " + e.getReport().toString(), e);
+            return new ErrorResult("schema_violated", "schemaId:" + context.getSchemaId());
+        }
+
     }
 
     @ExceptionHandler(FailedToLoadSchemaException.class)

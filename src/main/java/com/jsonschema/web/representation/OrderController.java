@@ -40,7 +40,7 @@ public class OrderController {
 	@ResponseBody
 	@JsonSchema(outputSchema = "1003")
 	public Order getOrder(@PathVariable("id") int id) {
-	    Order order = orderService.getOrder(id + 10);
+	    Order order = orderService.getOrder(id);
 		return order;
 	}
 
