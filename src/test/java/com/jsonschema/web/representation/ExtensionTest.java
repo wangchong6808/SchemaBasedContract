@@ -1,6 +1,6 @@
 package com.jsonschema.web.representation;
 
-import com.jsonschema.test.JsonSchemaExtension;
+import com.jsonschema.config.JsonSchemaExtension;
 import com.jsonschema.web.client.CustomerClient;
 import com.jsonschema.web.domain.OrderService;
 import org.junit.jupiter.api.BeforeEach;

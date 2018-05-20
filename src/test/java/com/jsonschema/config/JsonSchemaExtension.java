@@ -1,4 +1,4 @@
-package com.jsonschema.test;
+package com.jsonschema.config;
 
 import com.jsonschema.aop.MockBeanUtil;
 import com.jsonschema.aop.MockRemoteBean;
