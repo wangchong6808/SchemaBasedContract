@@ -3,6 +3,7 @@ package com.jsonschema.config;
 import com.jsonschema.aop.MockBeanUtil;
 import com.jsonschema.aop.MockRemoteBean;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.jupiter.api.extension.*;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -14,12 +15,12 @@ public class JsonSchemaExtension implements TestInstancePostProcessor, BeforeAll
 
     @Override
     public void postProcessTestInstance(Object testInstance, ExtensionContext context) {
-        for (Field field : testInstance.getClass().getDeclaredFields()) {
-            if (field.getAnnotation(MockRemoteBean.class) != null) {
-                Object mock = MockBeanUtil.mockBean(field.getType());
-                field.setAccessible(true);
-                ReflectionTestUtils.setField(testInstance, field.getName(), mock);
-            }
+
+        Field[] fields = FieldUtils.getFieldsWithAnnotation(testInstance.getClass(), MockRemoteBean.class);
+        for (Field field : fields) {
+            Object mock = MockBeanUtil.mockBean(field.getType());
+            field.setAccessible(true);
+            ReflectionTestUtils.setField(testInstance, field.getName(), mock);
         }
         log.info("testInstance is : " + testInstance);
         log.info("ExtensionContext is : " + context);
