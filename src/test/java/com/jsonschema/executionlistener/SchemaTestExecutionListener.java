@@ -1,4 +1,4 @@
-package org.springframework.boot.test.mock.mockito;
+package com.jsonschema.executionlistener;
 
 import com.jsonschema.aop.MockRemoteBean;
 import com.jsonschema.web.representation.ClientBeanPostProcessor;
