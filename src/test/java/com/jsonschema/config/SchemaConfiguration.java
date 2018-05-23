@@ -35,10 +35,6 @@ public class SchemaConfiguration {
                 .setLoadingConfiguration(cfg).freeze();
     }
 
-    public String getBastPath() {
-        return bastPath;
-    }
-
     public JsonSchema getSchema(String apiId) throws ProcessingException, IOException {
         if (!schemaMap.containsKey(apiId)) {
             JsonSchema schema = factory.getJsonSchema(JsonLoader.fromPath(bastPath + config.getProperty(apiId)));
