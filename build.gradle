@@ -1,17 +1,21 @@
 buildscript {
 	ext {
 		springBootVersion = '1.5.10.RELEASE'
+		junitPlatformVersion = '1.0.0'
 	}
 	repositories {
 		mavenCentral()
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+		classpath("org.junit.platform:junit-platform-gradle-plugin:${junitPlatformVersion}")
 	}
 }
 
 apply plugin: 'java'
 apply plugin: 'org.springframework.boot'
+apply plugin: 'jacoco'
+apply plugin: 'org.junit.platform.gradle.plugin'
 
 repositories {
 	mavenLocal()
@@ -50,6 +54,14 @@ dependencies {
 	testCompile("org.springframework.cloud:spring-cloud-contract-spec")
 }
 
+
+sourceSets {
+	main {
+		java {
+			srcDirs = ["src/main/java", "test"]
+		}
+	}
+}
 /*
 dependencies {
 	//compile "org.springframework.boot:spring-boot-starter-web"
