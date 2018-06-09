@@ -1,5 +1,6 @@
 package com.jsonschema.validation;
 
+import com.github.fge.jsonschema.main.JsonSchema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -12,6 +13,7 @@ public class ValidationContext {
     private String triggerPoint;
     private String schemaId;
     private String schemaPath;
+    private JsonSchema schema;
     private String payload;
 
     public String getTriggerPoint() {
@@ -34,6 +36,14 @@ public class ValidationContext {
             return;
         }
         this.schemaId = schemaId;
+    }
+
+    public JsonSchema getSchema() {
+        return schema;
+    }
+
+    public void setSchema(JsonSchema schema) {
+        this.schema = schema;
     }
 
     public String getSchemaPath() {

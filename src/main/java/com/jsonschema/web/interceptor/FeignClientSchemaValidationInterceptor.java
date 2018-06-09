@@ -1,39 +1,23 @@
 package com.jsonschema.web.interceptor;
 
-import com.jsonschema.util.ClasspathSchemaLoader;
-import com.jsonschema.util.JsonSchemaValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
-import java.io.IOException;
-import java.util.Properties;
 
 @Slf4j
 @Aspect
 @Component
 public class FeignClientSchemaValidationInterceptor {
 
-    @Value("${validation.schema.devmode:false}")
-    private boolean devMode;
-
-    SchemaValidationInterceptorHelper schemaValidationInterceptorUtil;
+    @Autowired
+    private SchemaValidationInterceptorHelper schemaValidationInterceptorHelper;
 
     @AfterReturning(value = "target(com.jsonschema.web.client.SchemaAwareClient)", returning = "response")
     public void validateResponse(JoinPoint joinPoint, Object response) {
-        schemaValidationInterceptorUtil.validateOutput(joinPoint, response);
+        schemaValidationInterceptorHelper.validateOutput(joinPoint, response);
     }
 
-    @PostConstruct
-    public void init() throws IOException {
-        Properties properties = new Properties();
-        properties.load(ControllerSchemaValidationInterceptor.class.getResourceAsStream("/schema/json/schema_config.properties"));
-
-        ClasspathSchemaLoader schemaLoader = new ClasspathSchemaLoader("resource:/schema/json/", properties, devMode);
-        schemaValidationInterceptorUtil = new SchemaValidationInterceptorHelper(new JsonSchemaValidator(schemaLoader));
-    }
 }

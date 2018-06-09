@@ -5,8 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jackson.JsonLoader;
 import com.github.fge.jsonschema.core.report.ProcessingReport;
 import com.jsonschema.annotation.JsonSchema;
-import com.jsonschema.config.RemoteSchemaRepository;
-import com.jsonschema.config.SchemaRepository;
+import com.jsonschema.config.SchemaRepositoryLocator;
 import com.jsonschema.exception.SchemaViolatedException;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
@@ -20,8 +19,6 @@ import java.lang.reflect.Method;
 @Slf4j
 @Aspect
 public class MyAspect {
-
-    private SchemaRepository repository = new RemoteSchemaRepository();
 
     private static ObjectMapper objectMapper = new ObjectMapper();
 
@@ -47,7 +44,7 @@ public class MyAspect {
         System.out.println("got you " + joinPoint.getSignature() + " " + schema);
         FeignClient feignClient = retrieveClassAnnotation((ProceedingJoinPoint) joinPoint, FeignClient.class);
         System.out.println("got you class " + feignClient);
-        com.github.fge.jsonschema.main.JsonSchema jsonSchema = repository.findSchemaByServiceAndApiId(feignClient.name(), schema.remoteSchema());
+        com.github.fge.jsonschema.main.JsonSchema jsonSchema = SchemaRepositoryLocator.locate(feignClient.name()).findById(schema.remoteSchema());
         ProcessingReport report = jsonSchema.validate(JsonLoader.fromString(objectMapper.writeValueAsString(response)));
         log.info("start to validate data by remote interface schema, service:{} ,remoteSchema:{}", feignClient.name(), schema.remoteSchema());
         if (report.isSuccess()) {

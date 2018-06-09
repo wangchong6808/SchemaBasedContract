@@ -1,22 +1,24 @@
 package com.jsonschema.web.interceptor;
 
 import com.jsonschema.annotation.JsonSchema;
-import com.jsonschema.exception.SchemaViolatedException;
+import com.jsonschema.config.SchemaRepository;
 import com.jsonschema.util.JsonSchemaValidator;
 import com.jsonschema.validation.ValidationContext;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 @Slf4j
+@Component
 public class SchemaValidationInterceptorHelper {
 
-    private JsonSchemaValidator jsonSchemaValidator;
+    private JsonSchemaValidator jsonSchemaValidator = new JsonSchemaValidator();
 
-    public SchemaValidationInterceptorHelper(JsonSchemaValidator jsonSchemaValidator) {
-        this.jsonSchemaValidator = jsonSchemaValidator;
-    }
+    @Autowired
+    private SchemaRepository schemaRepository;
 
     public void validateInput(JoinPoint joinPoint, Object content) {
         if (content == null) {
@@ -29,7 +31,8 @@ public class SchemaValidationInterceptorHelper {
         }
         ValidationContext context = ValidationContext.builder()
                 .triggerPoint(joinPoint.getTarget().getClass().getName())
-                .schemaId(inputSchema).build();
+                .schemaId(inputSchema)
+                .schema(schemaRepository.findById(inputSchema)).build();
         jsonSchemaValidator.validateObject(context, content);
     }
 
@@ -41,7 +44,8 @@ public class SchemaValidationInterceptorHelper {
         }
         ValidationContext context = ValidationContext.builder()
                 .triggerPoint(joinPoint.getTarget().getClass().getName())
-                .schemaId(outputSchema).build();
+                .schemaId(outputSchema)
+                .schema(schemaRepository.findById(outputSchema)).build();
         jsonSchemaValidator.validateObject(context, content);
     }
 

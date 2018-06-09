@@ -1,5 +1,6 @@
 package com.jsonschema.config;
 
+import com.jsonschema.util.ClasspathSchemaLoader;
 import org.springframework.cloud.contract.stubrunner.*;
 import org.springframework.cloud.contract.stubrunner.spring.StubRunnerProperties;
 
@@ -10,18 +11,31 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-public class SchemaLoader {
+public class SchemaRepositoryLocator {
 
-    private StubDownloaderBuilderProvider provider = new StubDownloaderBuilderProvider();
+    //private StubDownloaderBuilderProvider provider = new StubDownloaderBuilderProvider();
+
+    private static Map<String, SchemaRepository> repositoryMap = new HashMap<>();
 
     public static void main(String[] args) throws IOException {
-        SchemaLoader runner = new SchemaLoader();
-        runner.load("customer");
+        SchemaRepositoryLocator runner = new SchemaRepositoryLocator();
+        runner.locate("customer");
     }
 
-    public static SchemaConfiguration load(String service) throws IOException {
+    public static SchemaRepository locate(String service) throws IOException {
+        if (!repositoryMap.containsKey(service)) {
+            synchronized (SchemaRepositoryLocator.class) {
+                if (!repositoryMap.containsKey(service)) {
+                    SchemaRepository repository = download(service);
+                    repositoryMap.put(service, repository);
+                }
+            }
+        }
+        return repositoryMap.get(service);
+    }
+    public static SchemaRepository download(String service) throws IOException {
         Properties properties = new Properties();
-        properties.load(SchemaLoader.class.getResourceAsStream("/schema/json/provider.properties"));
+        properties.load(SchemaRepositoryLocator.class.getResourceAsStream("/schema/json/provider.properties"));
 
         StubRunnerProperties props = new StubRunnerProperties();
         props.setWorkOffline(true);
@@ -49,9 +63,7 @@ public class SchemaLoader {
         providerSchemaConfig.load(new FileInputStream(path + "schema_config.properties"));
 
         //}
-
-        return new SchemaConfiguration(path, providerSchemaConfig);
-
+        return new SchemaRepository(new ClasspathSchemaLoader(path, providerSchemaConfig, false));
     }
 
 

@@ -2,14 +2,11 @@ package com.jsonschema.util;
 
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
 import com.github.fge.jackson.JsonLoader;
 import com.github.fge.jsonschema.core.exceptions.ProcessingException;
-import com.github.fge.jsonschema.core.report.ListProcessingReport;
 import com.github.fge.jsonschema.core.report.ProcessingReport;
-import com.github.fge.jsonschema.main.JsonSchema;
 import com.jsonschema.exception.SchemaViolatedException;
 import com.jsonschema.exception.ValidationProcessingException;
 import com.jsonschema.validation.ValidationContext;
@@ -19,12 +16,6 @@ import java.io.IOException;
 
 @Slf4j
 public class JsonSchemaValidator {
-
-    private ClasspathSchemaLoader schemaLoader;
-
-    public JsonSchemaValidator(ClasspathSchemaLoader schemaLoader) {
-        this.schemaLoader = schemaLoader;
-    }
 
     private static final ObjectMapper objectMapper = new ObjectMapper()
             .registerModule(new JodaModule());
@@ -37,9 +28,7 @@ public class JsonSchemaValidator {
 
         try {
             String jsonBody = objectMapper.writeValueAsString(object);
-
-            JsonSchema schema = schemaLoader.getSchema(context.getSchemaId());
-            ProcessingReport report = schema.validate(JsonLoader.fromString(jsonBody));
+            ProcessingReport report = context.getSchema().validate(JsonLoader.fromString(jsonBody));
             context.setPayload(jsonBody);
             if (!report.isSuccess()) {
                 throw new SchemaViolatedException(report, context);

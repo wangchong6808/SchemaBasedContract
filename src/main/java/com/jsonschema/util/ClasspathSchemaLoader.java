@@ -1,5 +1,6 @@
 package com.jsonschema.util;
 
+import com.github.fge.jackson.JsonLoader;
 import com.github.fge.jsonschema.core.exceptions.ProcessingException;
 import com.github.fge.jsonschema.core.load.configuration.LoadingConfiguration;
 import com.github.fge.jsonschema.core.load.uri.URITranslatorConfiguration;
@@ -8,6 +9,7 @@ import com.github.fge.jsonschema.main.JsonSchemaFactory;
 import com.jsonschema.exception.FailedToLoadSchemaException;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -16,18 +18,25 @@ public class ClasspathSchemaLoader {
 
     private final Properties schemaConfig;
 
-    private final Map<String, JsonSchema> schemaMap = new HashMap<>();
+    private  JsonSchemaFactory factory;
 
-    private final JsonSchemaFactory factory;
+    private final String basePath;
 
-    private final boolean cacheSchema;
+    private boolean fromClasspath;
 
-    public ClasspathSchemaLoader(String basePath, Properties schemaConfig, boolean cacheSchema) {
+
+    public ClasspathSchemaLoader(String basePath, Properties schemaConfig) {
+        this(basePath, schemaConfig, true);
+
+    }
+
+    public ClasspathSchemaLoader(String basePath, Properties schemaConfig, boolean fromClasspath) {
+        this.basePath = basePath;
         this.schemaConfig = schemaConfig;
-        this.cacheSchema = cacheSchema;
+        this.fromClasspath = fromClasspath;
         URITranslatorConfiguration translatorCfg
                 = URITranslatorConfiguration.newBuilder()
-                .setNamespace(basePath).freeze();
+                .setNamespace("resource:" + basePath).freeze();
         LoadingConfiguration cfg = LoadingConfiguration.newBuilder()
                 .setURITranslatorConfiguration(translatorCfg).freeze();
 
@@ -36,23 +45,22 @@ public class ClasspathSchemaLoader {
 
     }
 
-    public JsonSchema getSchema(String schemaId) {
-        if (schemaMap.containsKey(schemaId)) {
-            return schemaMap.get(schemaId);
-        }
+    public JsonSchema loadSchema(String schemaId) {
         String schemaFile = (String) schemaConfig.get(schemaId);
         if (schemaFile == null) {
             throw new FailedToLoadSchemaException("schema config not found : "+schemaId, schemaId);
         }
 
         try {
-            JsonSchema schema = factory.getJsonSchema(schemaFile);
-            if (cacheSchema) {
-                schemaMap.put(schemaId, schema);
+            if (fromClasspath) {
+                return factory.getJsonSchema(schemaFile);
+            } else {
+                return factory.getJsonSchema(JsonLoader.fromPath(basePath + schemaConfig.getProperty(schemaId)));
             }
-            return schema;
         } catch (ProcessingException e) {
             throw new FailedToLoadSchemaException("failed to load schema : " + schemaId, e, schemaId);
+        } catch (IOException e) {
+            throw new FailedToLoadSchemaException("read schema file error : "+schemaId, e, schemaId);
         }
     }
 }
