@@ -1,7 +1,7 @@
-package com.jsonschema.config;
+package com.jsonschema.test.framework;
 
-import com.jsonschema.aop.MockBeanUtil;
-import com.jsonschema.aop.MockRemoteBean;
+import com.jsonschema.test.framework.aop.MockBeanUtil;
+import com.jsonschema.test.framework.aop.MockRemoteBean;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.jupiter.api.extension.*;

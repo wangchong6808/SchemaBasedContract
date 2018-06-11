@@ -1,4 +1,4 @@
-package com.jsonschema.aop;
+package com.jsonschema.test.framework.aop;
 
 import java.lang.annotation.*;
 

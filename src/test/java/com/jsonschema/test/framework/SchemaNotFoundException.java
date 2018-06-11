@@ -1,4 +1,4 @@
-package com.jsonschema.config;
+package com.jsonschema.test.framework;
 
 public class SchemaNotFoundException extends RuntimeException {
 

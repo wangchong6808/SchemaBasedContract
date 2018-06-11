@@ -1,7 +1,6 @@
-package com.jsonschema.executionlistener;
+package com.jsonschema.test.framework;
 
-import com.jsonschema.aop.MockRemoteBean;
-import com.jsonschema.web.representation.ClientBeanPostProcessor;
+import com.jsonschema.test.framework.aop.MockRemoteBean;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.springframework.test.context.TestContext;
 import org.springframework.test.context.support.AbstractTestExecutionListener;

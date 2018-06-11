@@ -1,7 +1,7 @@
 package com.jsonschema.unittest;
 
-import com.jsonschema.aop.MockRemoteBean;
-import com.jsonschema.config.JsonSchemaExtension;
+import com.jsonschema.test.framework.aop.MockRemoteBean;
+import com.jsonschema.test.framework.JsonSchemaExtension;
 import com.jsonschema.exception.SchemaViolatedException;
 import com.jsonschema.web.client.CustomerClient;
 import com.jsonschema.web.dto.Customer;

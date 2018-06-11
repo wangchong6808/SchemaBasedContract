@@ -17,7 +17,7 @@ public class LocalSchemaRepositoryConfiguration {
     private boolean devMode;
 
     @Bean
-    public SchemaRepository init() throws IOException {
+    public SchemaRepository createSchemaRepository() throws IOException {
         Properties properties = new Properties();
         properties.load(ControllerSchemaValidationInterceptor.class.getResourceAsStream("/schema/json/schema_config.properties"));
         ClasspathSchemaLoader schemaLoader = new ClasspathSchemaLoader("/schema/json/", properties);

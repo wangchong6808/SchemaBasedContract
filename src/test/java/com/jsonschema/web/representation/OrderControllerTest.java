@@ -1,7 +1,7 @@
 package com.jsonschema.web.representation;
 
 import com.jsonschema.HelloWorldApplication;
-import com.jsonschema.aop.MockRemoteBean;
+import com.jsonschema.test.framework.aop.MockRemoteBean;
 import com.jsonschema.web.client.CustomerClient;
 import com.jsonschema.web.dto.Customer;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,7 +11,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import com.jsonschema.executionlistener.SchemaTestExecutionListener;
+import com.jsonschema.test.framework.SchemaTestExecutionListener;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.test.context.TestExecutionListeners;

@@ -1,6 +1,6 @@
-package com.jsonschema.web.representation;
+package com.jsonschema.test.framework;
 
-import com.jsonschema.aop.MyAspect;
+import com.jsonschema.test.framework.aop.ClientAspect;
 import org.mockito.Mockito;
 import org.springframework.aop.aspectj.annotation.AspectJProxyFactory;
 import org.springframework.beans.BeansException;
@@ -27,7 +27,7 @@ public class ClientBeanPostProcessor implements BeanFactoryPostProcessor {
     public static void addBeanDefinition(Class c) {
         Object o = Mockito.mock(c);
         AspectJProxyFactory factory = new AspectJProxyFactory(o);
-        MyAspect aspect = new MyAspect();
+        ClientAspect aspect = new ClientAspect();
         factory.addAspect(aspect);
         beanDefinitions.put(c.getName(), factory.getProxy());
     }

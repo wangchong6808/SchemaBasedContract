@@ -1,7 +1,7 @@
 package com.jsonschema.config;
 
 import com.github.fge.jsonschema.main.JsonSchema;
-import com.jsonschema.util.ClasspathSchemaLoader;
+import com.jsonschema.util.SchemaLoader;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,7 +12,7 @@ public class SchemaRepository {
 
     private final Map<String, JsonSchema> schemaMap = new HashMap<>();
 
-    protected ClasspathSchemaLoader schemaLoader;
+    protected SchemaLoader schemaLoader;
 
     public JsonSchema findById(String schemaId) {
         if (!cacheSchema) {
@@ -29,11 +29,11 @@ public class SchemaRepository {
         return schemaMap.get(schemaId);
     }
 
-    public SchemaRepository(ClasspathSchemaLoader schemaLoader) {
+    public SchemaRepository(SchemaLoader schemaLoader) {
         this.schemaLoader = schemaLoader;
     }
 
-    public SchemaRepository(ClasspathSchemaLoader schemaLoader, boolean cacheSchema) {
+    public SchemaRepository(SchemaLoader schemaLoader, boolean cacheSchema) {
         this.cacheSchema = cacheSchema;
         this.schemaLoader = schemaLoader;
     }

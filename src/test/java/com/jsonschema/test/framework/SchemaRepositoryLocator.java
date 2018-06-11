@@ -1,5 +1,6 @@
-package com.jsonschema.config;
+package com.jsonschema.test.framework;
 
+import com.jsonschema.config.SchemaRepository;
 import com.jsonschema.util.ClasspathSchemaLoader;
 import org.springframework.cloud.contract.stubrunner.*;
 import org.springframework.cloud.contract.stubrunner.spring.StubRunnerProperties;
@@ -63,7 +64,7 @@ public class SchemaRepositoryLocator {
         providerSchemaConfig.load(new FileInputStream(path + "schema_config.properties"));
 
         //}
-        return new SchemaRepository(new ClasspathSchemaLoader(path, providerSchemaConfig, false));
+        return new SchemaRepository(new FilePathSchemaLoader(path, providerSchemaConfig));
     }
 
 
